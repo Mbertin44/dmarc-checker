@@ -1,7 +1,7 @@
-# dmarc-inspector
+# dmarc-checker
 
-[![npm version](https://img.shields.io/npm/v/dmarc-inspector)](https://www.npmjs.com/package/dmarc-inspector)
-[![CI](https://github.com/Mbertin44/dmarc-inspector/actions/workflows/ci.yml/badge.svg)](https://github.com/Mbertin44/dmarc-inspector/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/dmarc-checker)](https://www.npmjs.com/package/dmarc-checker)
+[![CI](https://github.com/Mbertin44/dmarc-checker/actions/workflows/ci.yml/badge.svg)](https://github.com/Mbertin44/dmarc-checker/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 Look up, validate and explain a domain's DMARC record ([RFC 7489](https://www.rfc-editor.org/rfc/rfc7489)), with recommendations in plain language.
@@ -14,7 +14,7 @@ Look up, validate and explain a domain's DMARC record ([RFC 7489](https://www.rf
 ## Install
 
 ```sh
-npm install dmarc-inspector
+npm install dmarc-checker
 ```
 
 Requires Node.js 22 or later. The package is ESM-only.
@@ -22,18 +22,16 @@ Requires Node.js 22 or later. The package is ESM-only.
 ## Usage
 
 ```ts
-import { checkDmarc } from "dmarc-inspector";
+import { checkDmarc } from 'dmarc-checker'
 
-const result = await checkDmarc("example.com");
+const result = await checkDmarc('example.com')
 
 if (result.tags) {
-  console.log(`Policy: ${result.tags.policy}`);
+  console.log(`Policy: ${result.tags.policy}`)
 }
 
 for (const issue of result.issues) {
-  console.log(
-    `[${issue.severity}] ${issue.message}\n  → ${issue.recommendation}`,
-  );
+  console.log(`[${issue.severity}] ${issue.message}\n  → ${issue.recommendation}`)
 }
 ```
 
@@ -50,9 +48,9 @@ Policy: none
 To check a record before publishing it, analyze the text directly, without any DNS query:
 
 ```ts
-import { analyzeDmarcRecord } from "dmarc-inspector";
+import { analyzeDmarcRecord } from 'dmarc-checker'
 
-analyzeDmarcRecord("v=DMARC1; p=reject; pct=150").issues;
+analyzeDmarcRecord('v=DMARC1; p=reject; pct=150').issues
 // [{
 //   severity: 'error',
 //   code: 'invalid-value',
@@ -76,14 +74,12 @@ A missing record is not an exception: it is reported as a `no-record` issue. The
 For example, to query a specific DNS server:
 
 ```ts
-import { Resolver } from "node:dns/promises";
+import { Resolver } from 'node:dns/promises'
 
-const resolver = new Resolver();
-resolver.setServers(["1.1.1.1"]);
+const resolver = new Resolver()
+resolver.setServers(['1.1.1.1'])
 
-await checkDmarc("example.com", {
-  resolveTxt: (hostname) => resolver.resolveTxt(hostname),
-});
+await checkDmarc('example.com', { resolveTxt: hostname => resolver.resolveTxt(hostname) })
 ```
 
 ### `analyzeDmarcRecord(record)`

@@ -1,5 +1,5 @@
 {
-  "name": "dmarc-inspector",
+  "name": "dmarc-checker",
   "version": "1.0.0",
   "description": "Look up, validate and explain a domain's DMARC record (RFC 7489), with plain-language recommendations.",
   "keywords": [
@@ -11,11 +11,11 @@
     "rfc7489",
     "validator"
   ],
-  "homepage": "https://github.com/Mbertin44/dmarc-inspector#readme",
-  "bugs": "https://github.com/Mbertin44/dmarc-inspector/issues",
+  "homepage": "https://github.com/Mbertin44/dmarc-checker#readme",
+  "bugs": "https://github.com/Mbertin44/dmarc-checker/issues",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Mbertin44/dmarc-inspector.git"
+    "url": "git+https://github.com/Mbertin44/dmarc-checker.git"
   },
   "license": "MIT",
   "author": "Morgan Bertin",
