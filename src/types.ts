@@ -1,17 +1,25 @@
-/** What receivers should do with mail that fails DMARC (`p` and `sp` tags). */
+/** What receivers should do with mail that fails DMARC (`p`, `sp` and `np` tags). */
 export type DmarcPolicy = 'none' | 'quarantine' | 'reject'
 
 /** How closely the visible From domain must match the SPF or DKIM domain (`aspf` and `adkim` tags). */
 export type DmarcAlignment = 'relaxed' | 'strict'
 
-/** The tags of a valid DMARC record, with the RFC 7489 defaults applied to the optional ones. */
+/**
+ * Whether the record is published by a public suffix domain such as a TLD (`psd` tag).
+ * `'no'` also marks the domain as the Organizational Domain of its subdomains.
+ */
+export type DmarcPublicSuffixDomain = 'yes' | 'no' | 'unspecified'
+
+/** The tags of a valid DMARC record, with the RFC 9989 defaults applied to the absent ones. */
 export interface DmarcTags {
-  /** `p`: policy for the domain itself. */
+  /** `p`: policy for the domain itself. Defaults to `'none'`. */
   policy: DmarcPolicy
-  /** `sp`: policy for subdomains. Defaults to `policy`. */
+  /** `sp`: policy for existing subdomains. Defaults to `policy`. */
   subdomainPolicy: DmarcPolicy
-  /** `pct`: percentage of failing mail the policy applies to. Defaults to `100`. */
-  percentage: number
+  /** `np`: policy for subdomains that do not exist. Defaults to `subdomainPolicy`. */
+  nonExistentSubdomainPolicy: DmarcPolicy
+  /** `t`: when `true`, receivers apply the policy one level below the one requested. Defaults to `false`. */
+  testMode: boolean
   /** `rua`: where aggregate reports are sent. */
   aggregateReportUris: string[]
   /** `ruf`: where failure reports are sent. */
@@ -22,16 +30,14 @@ export interface DmarcTags {
   spfAlignment: DmarcAlignment
   /** `fo`: when failure reports are generated. Defaults to `['0']`. */
   failureReportingOptions: string[]
-  /** `rf`: failure report formats. Defaults to `['afrf']`. */
-  reportFormats: string[]
-  /** `ri`: requested interval between aggregate reports, in seconds. Defaults to `86400`. */
-  reportInterval: number
+  /** `psd`: whether the record is published by a public suffix domain. Defaults to `'unspecified'`. */
+  publicSuffixDomain: DmarcPublicSuffixDomain
 }
 
 /**
- * - `error`: the record is missing or breaks RFC 7489, so receivers may ignore it.
+ * - `error`: the record is missing or breaks the DMARC syntax, so receivers may ignore all or part of it.
  * - `warning`: the record works but leaves a gap in protection or visibility.
- * - `info`: a possible improvement.
+ * - `info`: something worth knowing, or a possible improvement.
  */
 export type DmarcSeverity = 'error' | 'warning' | 'info'
 
@@ -41,14 +47,16 @@ export type DmarcIssueCode =
   | 'invalid-syntax'
   | 'duplicate-tag'
   | 'invalid-version'
-  | 'missing-policy'
   | 'invalid-value'
+  | 'missing-policy'
   | 'unknown-tag'
+  | 'obsolete-tag'
   | 'policy-none'
-  | 'policy-quarantine'
-  | 'partial-percentage'
+  | 'test-mode'
   | 'subdomain-policy-none'
   | 'no-aggregate-reports'
+  | 'policy-quarantine'
+  | 'inherited-record'
 
 export interface DmarcIssue {
   severity: DmarcSeverity
@@ -63,10 +71,10 @@ export interface DmarcIssue {
 export interface DmarcResult {
   /** The raw DMARC record, or `null` when none was found. */
   record: string | null
-  /** The parsed tags, or `null` when the record is missing or invalid. */
+  /** The parsed tags, or `null` when the record is missing or has errors. */
   tags: DmarcTags | null
   /** `true` when the record exists and has no errors. */
   valid: boolean
-  /** Errors first, then warnings, then suggestions. */
+  /** Errors first, then warnings, then information. */
   issues: DmarcIssue[]
 }

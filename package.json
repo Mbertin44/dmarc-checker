@@ -1,14 +1,14 @@
 {
   "name": "dmarc-checker",
   "version": "1.0.0",
-  "description": "Look up, validate and explain a domain's DMARC record (RFC 7489), with plain-language recommendations.",
+  "description": "Look up, validate and explain a domain's DMARC record (RFC 9989), with plain-language recommendations.",
   "keywords": [
     "dmarc",
     "email",
     "dns",
     "spoofing",
     "deliverability",
-    "rfc7489",
+    "rfc9989",
     "validator"
   ],
   "homepage": "https://github.com/Mbertin44/dmarc-checker#readme",

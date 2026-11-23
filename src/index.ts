@@ -5,6 +5,7 @@ export type {
   DmarcIssue,
   DmarcIssueCode,
   DmarcPolicy,
+  DmarcPublicSuffixDomain,
   DmarcResult,
   DmarcSeverity,
   DmarcTags,
