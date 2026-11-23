@@ -1,0 +1,48 @@
+{
+  "name": "dmarc-inspector",
+  "version": "1.0.0",
+  "description": "Look up, validate and explain a domain's DMARC record (RFC 7489), with plain-language recommendations.",
+  "keywords": [
+    "dmarc",
+    "email",
+    "dns",
+    "spoofing",
+    "deliverability",
+    "rfc7489",
+    "validator"
+  ],
+  "homepage": "https://github.com/Mbertin44/dmarc-inspector#readme",
+  "bugs": "https://github.com/Mbertin44/dmarc-inspector/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mbertin44/dmarc-inspector.git"
+  },
+  "license": "MIT",
+  "author": "Morgan Bertin",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@10.26.1",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2",
+    "vitest": "^5.1.1"
+  }
+}
